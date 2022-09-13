@@ -9,7 +9,8 @@ require('dotenv').config();
 const app = express();
 
 //All routing file import
-const authRouter = require('./routes/auth')
+const authRouter = require('./routes/auth');
+const userRouter = require('./routes/user');
 
 //middleware
 app.use(express.urlencoded({extended:true}));
@@ -26,7 +27,8 @@ mongoose.connect(process.env.DATABASE_URL).then(()=>{
 
 
 //routing
-app.use('/api', authRouter)
+app.use('/api', authRouter);
+app.use('/api', userRouter);
 
 //run the app
 const port = process.env.PORT || 8000;

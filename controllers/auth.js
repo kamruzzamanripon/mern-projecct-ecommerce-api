@@ -1,6 +1,39 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const expressJWT = require('express-jwt');
+const { expressjwt: expressJwt } = require('express-jwt');
+
+//internal import
+const {errorHandler} = require('../helper/dbErrorHandel.js');
+
+//require sign in
+exports.requireSignIn = expressJwt({
+    secret: process.env.JWT_SECRET,
+    algorithms: ["HS256"],
+    userProperty: ["auth"]
+})
+
+//check if the user is authenticate
+exports.isAuth = (req, res, next)=>{
+    let user = req.profile && req.auth && req.profile._id == req.auth.id;
+    if(!user){
+        return res.status(403).json({
+            error: 'Access Denied',
+        })
+    }
+
+    next();
+}
+
+//check if the user is Admin
+exports.isAdmin = (req, res, next)=>{
+    if(req.profile.role == 0){
+        return res.status(403).json({
+            error: "Admin Resource! Access Denied"
+        })
+    }
+
+    next();
+}
 
 //create new User
 exports.signUp = (req, res, next)=>{
@@ -9,7 +42,9 @@ exports.signUp = (req, res, next)=>{
 
     user.save((err, result)=>{
         if(err){
-            return err;
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
         }else{
             user.salt = undefined;
             user.hashedPassword = undefined;

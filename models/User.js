@@ -25,11 +25,11 @@ const userSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        dafult:0,
+        default:0,
     },
     history:{
-        type:String,
-        dafult:[],
+        type:Array,
+        default:[],
     },
     salt: String
 }, {timestamps: true});
