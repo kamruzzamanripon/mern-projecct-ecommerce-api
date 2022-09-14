@@ -89,3 +89,10 @@ exports.singIn = (req, res, next)=>{
         })
     })
 }
+
+
+//Sign out
+exports.singOut = (res, req, next)=>{
+    res.clearCookie('t');
+    return res.json({message: "signout Successfully"})
+}

@@ -13,7 +13,11 @@ router.route('/singup')
 
 //user sign in routing
 router.route("/signin")
-    .post(authController.singIn)    
+    .post(authController.singIn)  
+    
+//user sign Out routing
+router.route("/signout")
+    .get(authController.singOut)        
 
 
 
