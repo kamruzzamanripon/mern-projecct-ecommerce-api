@@ -30,6 +30,14 @@ router.route("/product/photo/:productId")
 //get Product Categories
 router.route("/product/categories")
     .get(productController.getCategories)   
+
+//Get Search Product
+router.route("/products/by/search")
+    .post(productController.searchData) 
+
+//Get Search by Typing Product
+router.route("/products/search")
+    .get(productController.querySearchData)     
     
 //Show related Product
 router.route("/products/related/:productId")

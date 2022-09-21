@@ -41,9 +41,10 @@ exports.create = (req, res, next)=>{
             })
         }
 
-        let product = new Product(fields);
+        let product = req.product;
+        product = _.extend(product, fields)
 
-        if(files.photo){
+        if(files.photo.size > 0){
             if(files.photo.size > 1000000){
                 return res.status(400).json({
                     error: "Image Size should be less than 1 MB"
@@ -162,6 +163,7 @@ exports.readAll = (req, res, next)=>{
 exports.getPhoto = (req,res,next)=>{
     if(req.product.photo.data){
         res.set("Content-Type", req.product.photo.contentType);
+        //console.log("photo", req.product.photo.data)
         return res.send(req.product.photo.data)
     }
 }
@@ -195,4 +197,69 @@ exports.getRelatedProducts =(req, res, next)=>{
                 return res.send(result)
             }
         })
+}
+
+
+//Search Product Data
+exports.searchData = (req, res, next)=>{
+    let order = req.body.order ? req.body.order : "asc";
+    let sortBy = req.body.sortBy ? req.body.sortBy : "_id";
+    let limit = req.body.limit ? req.body.limit : 100;
+    let skip = parseInt(req.body.skip);
+
+    let findArgs = {};
+
+    for (let key in req.body.filters){
+        if(req.body.filters[key].length > 0){
+            if(key == "price"){
+                findArgs[key] = {
+                    $gte: req.body.filters[key][0],
+                    $lte: req.body.filters[key][1],
+                }
+            }else{
+                findArgs[key] = req.body.filters[key];
+            }
+        }
+    }
+
+    Product.find(findArgs)
+        .select("-photo")
+        .populate("category")
+        .sort([[sortBy, order]])
+        .skip(skip)
+        .limit(limit)
+        .exec((err, data)=>{
+            if(err){
+                return res.status(400).json({
+                    error: "Product not Found"
+                })
+            }else{
+                return res.json({
+                    size: data.length,
+                    data
+                })
+            }
+        })
+
+}
+
+//get query search Data
+exports.querySearchData = (req, res, next)=>{
+    let query = {};
+     if(req.query.search){
+        query.name = { $regex: req.query.search, $options: "i"}
+        if(req.query.category && req.query.category != "All"){
+            query.category = req.query.category;
+        }
+     }
+
+     Product.find(query, (err, result)=>{
+        if(err){
+            return res.status(400).json({
+                error: errorHandler(err)
+            })
+        }else{
+            return res.json(result);
+        }
+     })
 }
