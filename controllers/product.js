@@ -263,3 +263,25 @@ exports.querySearchData = (req, res, next)=>{
         }
      })
 }
+
+//Decrease the quantity after an order
+exports.decreaseQnt = (req, res, next) =>{
+    let bulkOption = req.body.order.products.map((item)=>{
+        return{
+            updateOne:{
+                filter: {_id: item._id},
+                update: { $inc: {quantiy: -item.count, sold: +item.count}}
+            }
+        }
+    })
+
+    Product.bulkWrite(bulkOption, {}, (err,data)=>{
+        if(err){
+            return res.status(400).json({
+                error: "Can't Update the Product"
+            })
+        }else{
+            next()
+        }
+    })
+}

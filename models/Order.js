@@ -13,10 +13,10 @@ const CartItemSchema = new mongoose.Schema({
     count:Number
     
 }, {timestamps: true});
-const CartItem = mongoose.model("CartItemSchema", categorySchema);
+const CartItem = mongoose.model("CartItem", CartItemSchema);
 
 const OrderSchema = new mongoose.Schema({
-    product:[categorySchema],
+    products:[CartItemSchema],
     transaction_id: {},
     amount:{
         type: Number
@@ -34,7 +34,7 @@ const OrderSchema = new mongoose.Schema({
     }
     
 }, {timestamps: true});
-const Order = mongoose.model("CartItemSchema", OrderSchema);
+const Order = mongoose.model("Order", OrderSchema);
 
 
 module.exports = {CartItem, Order};

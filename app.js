@@ -14,6 +14,7 @@ const userRouter = require('./routes/user');
 const categoryRouter = require('./routes/category');
 const productRouter = require('./routes/product');
 const brainTreeRouter = require('./routes/braintree');
+const orderRouter = require('./routes/order');
 
 //middleware
 app.use(express.urlencoded({extended:true}));
@@ -35,6 +36,7 @@ app.use('/api', userRouter);
 app.use('/api', categoryRouter);
 app.use('/api', productRouter);
 app.use('/api', brainTreeRouter);
+app.use('/api', orderRouter);
 
 //run the app
 const port = process.env.PORT || 8000;

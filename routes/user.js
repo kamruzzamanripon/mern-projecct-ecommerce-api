@@ -8,11 +8,12 @@ const userController = require('../controllers/user');
 
 //user sing up routing
 router.route('/user/:userId')
-    .get(authController.requireSignIn, authController.isAuth,authController.isAdmin, (req, res, next) =>{
-        return res.json({
-            user: req.profile
-        })
-    })
+    .get(authController.requireSignIn, authController.isAuth, userController.getUser)
+    .put(authController.requireSignIn, authController.isAuth, userController.putUpdateUser)
+    
+//get user order List
+router.route('/orders/by/user/:userId')
+    .get(authController.requireSignIn, authController.isAuth, userController.orderHistory)
 
 
 //find user by id
