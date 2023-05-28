@@ -1,23 +1,26 @@
 const express = require('express');
 const router = express.Router();
 
-//get the controller
-const authController = require('../controllers/auth');
-const userController = require('../controllers/user');
+//get the controler
+const authController = require('../controllers/auth.js');
+const userController = require('../controllers/user.js');
 
 
-//user sing up routing
-router.route('/user/:userId')
+
+// user sign up routing
+router.route("/user/:userId")
     .get(authController.requireSignIn, authController.isAuth, userController.getUser)
     .put(authController.requireSignIn, authController.isAuth, userController.putUpdateUser)
-    
-//get user order List
-router.route('/orders/by/user/:userId')
+
+
+// get user order list
+router.route("/orders/by/user/:userId")
     .get(authController.requireSignIn, authController.isAuth, userController.orderHistory)
 
 
+
 //find user by id
-router.param('userId', userController.userById)        
+router.param('userId', userController.userById)
 
 
 

@@ -1,23 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
-//get the controller
-const authController = require('../controllers/auth');
-const userController = require('../controllers/user');
-const productController = require('../controllers/product');
-const orderController = require('../controllers/order');
+//get the controler
+const authController = require('../controllers/auth.js');
+const userController = require('../controllers/user.js');
+const prodcutController = require('../controllers/product.js');
+const orderController = require('../controllers/order')
 
-
-//user sing up routing
+//create a new order
 router.route('/order/create/:userId').post(
     authController.requireSignIn,
     authController.isAuth,
     userController.addOrderToHistory,
-    productController.decreaseQnt,
+    prodcutController.decreaseQnt,
     orderController.postCreateOrder
 )
 
-//Get all order List for admin
+// get all order list for admin
 router.route('/order/list/:userId').get(
     authController.requireSignIn,
     authController.isAuth,
@@ -25,7 +24,8 @@ router.route('/order/list/:userId').get(
     orderController.listOrder
 )
 
-//update order Status
+
+//update order status
 router.route('/order/:orderId/status/:userId').put(
     authController.requireSignIn,
     authController.isAuth,
@@ -33,17 +33,20 @@ router.route('/order/:orderId/status/:userId').put(
     orderController.updateOrderStatus
 )
 
-//Get Order Status
+
+//get order status
 router.route('/order/status-values/:userId').get(
     authController.requireSignIn,
     authController.isAuth,
     authController.isAdmin,
     orderController.getStatusValues
 )
-//find user by id
-router.param('userId', userController.userById)   
 
-//find Order by id
+
+//find user by id
+router.param('userId', userController.userById)
+
+//find order by id
 router.param('orderId', orderController.orderById)
 
 

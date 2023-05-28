@@ -1,34 +1,51 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-//get the controller
-const authController = require('../controllers/auth');
-const userController = require('../controllers/user');
-const categoryController = require('../controllers/category');
+//get the controler
+const authController = require("../controllers/auth.js");
+const userController = require("../controllers/user.js");
+const categoryController = require("../controllers/category");
 
-//Create 
-router.route('/category/create/:userId')
-    .post(authController.requireSignIn, authController.isAuth, authController.isAdmin, categoryController.create)
+//create new category
+router
+  .route("/category/create/:userId")
+  .post(
+    authController.requireSignIn,
+    authController.isAuth,
+    authController.isAdmin,
+    categoryController.create
+  );
 
-// Update and delete    
-router.route('/category/:categoryId/:userId')
-    .put(authController.requireSignIn, authController.isAuth, authController.isAdmin, categoryController.update)
-    .delete(authController.requireSignIn, authController.isAuth, authController.isAdmin, categoryController.delete)
+// update / delete a category
+router
+  .route("/category/:categoryID/:userId")
+  .put(
+    authController.requireSignIn,
+    authController.isAuth,
+    authController.isAdmin,
+    categoryController.update
+  )
+  .delete(
+    authController.requireSignIn,
+    authController.isAuth,
+    authController.isAdmin,
+    categoryController.delete
+  );
+
 
 //get single category
-router.route('/category/:categoryId')
-    .get(categoryController.read)    
+router.route('/category/:categoryID')
+    .get(categoryController.read)
 
-//get All category
+//get all category
 router.route('/categories')
-    .get(categoryController.readAll)      
+    .get(categoryController.readAll)    
 
 
 //find user by id
-router.param('userId', userController.userById)  
-//find Catetgory by id
-router.param('categoryId', categoryController.categoryById)        
+router.param("userId", userController.userById);
 
+//find category by id
+router.param("categoryID", categoryController.categoryById);
 
-
-module.exports = router;    
+module.exports = router;

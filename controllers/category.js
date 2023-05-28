@@ -1,84 +1,90 @@
-const { errorHandler } = require("../helper/dbErrorHandel");
 const Category = require("../models/Category");
 
- 
-//find category by Id
-exports.categoryById =(req, res, next, id)=>{
+
+//internal import
+const { errorHandler } = require("../helper/dbErrorHandel.js");
+
+
+
+//find category by id
+exports.categoryById = (req,res,next, id) =>{
     Category.findById(id).exec((err, result)=>{
-        if(err || !result){
+        if(err || !result) {
             return res.status(400).json({
-                error: "Category does not found",
-            })
+                error: "Category does not found!",
+              });
         }else{
-            req.category = result;
+            req.category  = result;
             next();
         }
     })
 }
 
+//create category
+exports.create = (req,res, next) =>{
+   let category =  new Category(req.body);
 
-exports.create = (req, res, next) => {
-  let category = new Category(req.body);
+   category.save( (err,result) =>{
+       if(err){
+        console.log(err)
+        return res.status(400).json({
+            error: errorHandler(err),
+          });
+       }else{
+        return res.json( result );
+       }
+   })
+}
 
-  category.save((err, result) => {
-    if (err) {
-      return res.status(400).json({
-        error: errorHandler,
-      });
-    } else {
-      return res.json( result );
-    }
-  });
-};
 
-//update a category
-exports.update =(req, res, next)=>{
-    const category = req.category;
+// update a category
+exports.update = (req,res,next) =>{
+    const category  =  req.category;
     category.name = req.body.name;
 
-    category.save((err, result)=>{
+    category.save( (err,result) =>{
         if(err){
-            console.log(err)
-            return res.status(400).json({
-                error: errorHandler(err)
-            })
+         console.log(err)
+         return res.status(400).json({
+             error: errorHandler(err),
+           });
         }else{
-            return res.json(result)
+         return res.json(result);
         }
     })
 }
 
-//delete a Categoy 
-exports.delete =(req, res, next)=>{
-    const category = req.category;
+//delete a category
+exports.delete = (req,res,next) =>{
+    const category  =  req.category;
    
-
-    category.remove((err, result)=>{
+    category.remove( (err,result) =>{
         if(err){
-            console.log(err)
-            return res.status(400).json({
-                error: errorHandler(err)
-            })
+         console.log(err)
+         return res.status(400).json({
+             error: errorHandler(err),
+           });
         }else{
-            return res.json({ message: "Category Deleted Successfullly"})
+         return res.json({ message: "Category Deleted Successfully!" });
         }
     })
 }
 
-//single category read
-exports.read = (req, res, next)=>{
-    return res.json(req.category)
+
+//get single category
+exports.read = (req,res,next)=>{
+    return res.json(  req.category );
 }
 
-//get all Cate
-exports.readAll = (req, res, next)=>{
+//get all categories name
+exports.readAll = (req, res,next) =>{
     Category.find().exec((err, result)=>{
         if(err){
             return res.status(400).json({
                 error: errorHandler(err),
-            })
+              });
         }else{
-            return res.json(result)
+            return res.json( result );
         }
     })
 }
