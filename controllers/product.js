@@ -243,8 +243,6 @@ exports.searchData = (req, res, next) => {
 exports.querySearchData = (req, res, next) => {
   let query = {};
 
-  console.log("asd");
-
   if (req.query.search) {
     query.name = { $regex: req.query.search, $options: "i" };
     if (req.query.category && req.query.category != "All") {
